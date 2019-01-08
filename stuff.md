@@ -1,3 +1,7 @@
+---
+Sure, I'd written plenty of JS code for web apps, Node apps, and React Native apps. But I reached the limits of my understanding while working on a
+---
+
 # Primary Sources
 
 - https://www.ecma-international.org/ecma-262/9.0/index.html
@@ -17,7 +21,7 @@
 - https://stackoverflow.com/questions/24117267/nodejs-settimeoutfn-0-vs-setimmediatefn
 - https://www.promisejs.org/implementing/
 - https://stackoverflow.com/questions/779379/why-is-settimeoutfn-0-sometimes-useful
-- https://web.archive.org/web/20170920070053/https://developer.mozilla.org/presentations/xtech2006/javascript/
+- https://developer.mozilla.org/en-US/docs/Tools/Performance/Scenarios/Intensive_JavaScript
 - https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/
 - https://esdiscuss.org/topic/the-initialization-steps-for-web-browsers#content-16
 - https://blog.sessionstack.com/how-javascript-works-the-building-blocks-of-web-workers-5-cases-when-you-should-use-them-a547c0757f6a
