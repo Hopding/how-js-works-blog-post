@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+  </head>
+
+  <body>
+    <button onclick="startComputingPrimes()">Start Computing Primes</button>
+    <div id="primes-count"></div>
+  </body>
+
+  <script type="text/javascript">
+    function isPrime(n) {
+      for (let i = 2; i < n; i++) {
+        if (n % i === 0) return false;
+      }
+      return true;
+    }
+    async function computePrimes(onPrime) {
+      for (let currNum = 1; true; currNum++) {
+        if (isPrime(currNum)) onPrime(currNum);
+        if (currNum % 500 === 0) await new Promise(setTimeout); // Magic‽
+      }
+    }
+
+    let primesCount = 0;
+    const primesCountDiv = document.getElementById('primes-count');
+
+    function startComputingPrimes() {
+      computePrimes(prime => {
+        primesCount += 1;
+        if (primesCount % 500 === 0) {
+          const msg = `Total Primes Found: ${primesCount}`;
+          primesCountDiv.textContent = msg;
+          console.log(msg);
+        }
+      });
+    }
+  </script>
+</html>

@@ -1,0 +1,22 @@
+#! /bin/bash
+
+# Exit as soon as an error occurs
+set -e
+
+# printf "Enter the Google Drive file ID to update: "
+# read file_id
+file_id='1Dls4z_5Ag9HQNO6L4pACh--y02QjaS2lTlTNxLaGTs8'
+
+temp_file='./how-js-works-blog-post.docx'
+
+touch "$temp_file"
+
+pandoc "./how-js-works-blog-post.md" --from markdown --to docx --output "$temp_file"
+
+res=$(gdrive update "$file_id" "$temp_file")
+
+printf "Updated at https://docs.google.com/document/d/%s/edit\n" "$file_id"
+
+rm "$temp_file"
+
+exit 0

@@ -1,0 +1,18 @@
+#! /bin/bash
+
+# Exit as soon as an error occurs
+set -e
+
+temp_file='./how-js-works-blog-post.docx'
+
+touch "$temp_file"
+
+pandoc "./how-js-works-blog-post.md" --from markdown --to docx --output "$temp_file"
+
+doc_id=($(gdrive import "$temp_file" | awk '/Imported/{print $2}'))
+
+printf "Published to https://docs.google.com/document/d/%s/edit\n" "$doc_id"
+
+rm "$temp_file"
+
+exit 0
