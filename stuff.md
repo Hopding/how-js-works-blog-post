@@ -1,3 +1,7 @@
+The JavaScript language specification doesn't dictate the order in which these queues are to be serviced. This is left up to the designers of the JavaScript engine to decide. An engine might choose to handle all the events in its timer queue first, and only move onto the DOM event queue when the timer queue is empty. Or, the engine might interweave events from both queues.
+
+It is also left to the engine designers to decide what happens when all event queues are empty. An engine might choose to exit (like NodeJS) or continue running and wait for some outside source to enqueue a new event (like web browsers).
+
 # Simulating the Event Loop
 
 To help solidify our discussion about the Event Loop, let's write some code to simulate it:

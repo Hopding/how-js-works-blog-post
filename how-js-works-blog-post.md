@@ -195,50 +195,65 @@ Interesting! The same thing still happens. To understand why, we need to underst
 
 # The Event Loop
 
-If the Call Stack keeps track of the functions that are executing right now, then the Event Loop keeps track of functions that are going to be executed in the future. The Event Loop consists of queues of functions. When the Call Stack is empty, the JavaScript engine picks a queue and removes the oldest function from it. The engine then invokes this function, which fills up the Call Stack. When this function finishes running and the Call Stack is empty again, another function is taken from a queue, then it is invoked, and so on.
+If the Call Stack keeps track of the functions that are executing right now, then the Event Loop keeps track of functions that are going to be executed in the future. The term **Event Loop** refers to two things:
 
-Let's visualize our last code snippet with a Call Stack and an Event Queue:
+- The **Task Queue**, which is a FIFO queue of tasks.
+- The looping algorithm that processes the tasks in the Task Queue.
 
-```
-=========== State 1 =================
-|  Call Stack  |   | Function Queue |
-|--------------|   |----------------|
+**Tasks** are synchronous blocks of code. You can think of them as `Function` objects.
 
-=========== State 2 =================
-|  Call Stack  |   | Function Queue |
-| logA()       |   |----------------|
-|--------------|
+The Event Loop works by continuously looping through the Task Queue and processing the tasks it contains one by one. A single iteration of the Event Loop is called a **tick**.
 
-=========== State 3 =================
-|  Call Stack  |   | Function Queue |
-| setTimeout() |   | logB           |
-|--------------|   |----------------|
-
-=========== State 4 =================
-|  Call Stack  |   | Function Queue |
-| logC()       |   | logB           |
-|--------------|   |----------------|
-
-=========== State 5 =================
-|  Call Stack  |   | Function Queue |
-|--------------|   | logB           |
-                   |----------------|
-
-=========== State 6 =================
-|  Call Stack  |   | Function Queue |
-| logB()       |   |----------------|
-|--------------|
+```js
+while (EventLoop.waitForTask()) {
+  EventLoop.processNextTask();
+}
 ```
 
-In this example, we're only visualizing a single callback queue. However, most JavaScript engines use multiple queues to manage events. For example, a browser might have one queue for timer callbacks, and another queue for DOM event callbacks.
+To process a task, the Event Loop invokes the `Function` associated with it. While a task is running, it has exclusive access to the Call Stack. The Event Loop waits to process the next task until the current task is finished, and the Call Stack is empty.
 
-The JavaScript language specification doesn't dictate the order in which these queues are to be serviced. This is left up to the designers of the JavaScript engine to decide. An engine might choose to handle all the events in its timer queue first, and only move onto the DOM event queue when the timer queue is empty. Or, the engine might interweave events from both queues.
+While a task is running, it can enqueue other tasks to be processed in subsequent ticks of the Event Loop. There are several ways to do this, the simplest of which is `setTimeout(taskFn, 0)`. Tasks can also come from external sources such as DOM and network events.
 
-It is also left to the engine designers to decide what happens when all event queues are empty. An engine might choose to exit (like NodeJS) or continue running and wait for some outside source to enqueue a new event (like web browsers).
+![The JavaScript Event Loop](basic_event_loop_21.png)
+
+(Diagram Credit: [Bertalan Miklos](https://blog.risingstack.com/writing-a-javascript-framework-execution-timing-beyond-settimeout/))
+
+Let's visualize our last code snippet with a Call Stack and Task Queue:
+
+```
+============ State 1 ============
+|  Call Stack  |   | Task Queue |
+|--------------|   |------------|
+
+============ State 2 ============
+|  Call Stack  |   | Task Queue |
+| logA()       |   |------------|
+|--------------|
+
+============ State 3 ============
+|  Call Stack  |   | Task Queue |
+| setTimeout() |   | logB       |
+|--------------|   |------------|
+
+============ State 4 ============
+|  Call Stack  |   | Task Queue |
+| logC()       |   | logB       |
+|--------------|   |------------|
+
+============ State 5 ============
+|  Call Stack  |   | Task Queue |
+|--------------|   | logB       |
+                   |------------|
+
+============ State 6 ============
+|  Call Stack  |   | Task Queue |
+| logB()       |   |------------|
+|--------------|
+```
 
 # One Event at a Time
 
-JavaScript has a single Call Stack. Because of this, the Event Loop is only allowed to process one event at a time. This makes for a relatively simple execution model that saves JavaScript from a host of concurrency issues.
+JavaScript has a single Call Stack. Because of this, the Event Loop is only allowed to process one task at a time. This makes for a relatively simple execution model that saves JavaScript from a host of concurrency issues.
 
 Consider [reentrancy](<https://en.wikipedia.org/wiki/Reentrancy_(computing)>), defined by Wikipedia as follows:
 
@@ -246,37 +261,37 @@ Consider [reentrancy](<https://en.wikipedia.org/wiki/Reentrancy_(computing)>), d
 
 JavaScript programmers don't have to worry about making their functions reentrant, because they can never be interrupted[^1]! JS functions always run to completion.
 
-[^1]: This isn't strictly true. If a function is recursive it can be entered a second time before the initial invocation is complete. However, this is not a concurrency issue forced upon the developer by the runtime. This scenario isn't representative of the context in which reentrancy is typically a concern for developers.
+[^1]: This isn't strictly true. If a function is recursive it can be entered a second time before the initial invocation is complete. However, this is not a concurrency issue forced upon the developer by the runtime. So this scenario isn't representative of the context in which reentrancy is typically a concern for developers.
 
 However, this simple execution model doesn't come without risks.
 
-Suppose a "rogue" callback makes its way from an event queue onto the Call Stack. This rogue callback never finishes running, and occupies the Call Stack indefinitely. If this happens, the rogue callback is able to prevent all other events from ever being processed. This includes critical events, such as rendering callbacks!
+Suppose a "rogue" task makes its way onto the Call Stack. This rogue task never finishes running, and occupies the Call Stack indefinitely. If this happens, the rogue task will prevent all other tasks from ever being processed. This means all other work will grind to a halt, hindering critical tasks such a rerendering!
 
-For this reason, web browsers monitor how much time callbacks spend on the Call Stack. If a callback takes too long to finish, the browser alerts the user and gives them the option to "Stop It" - removing the callback from the Call Stack and allowing other events to be processed.
+For this reason, web browsers monitor how much time tasks spend on the Call Stack. If a task takes too long to finish, the browser alerts the user and gives them the option to "Stop It" - removing the task from the Call Stack and allowing other events to be processed.
 
 # How our Magic Works
 
-Let's return to our example. Before we added magic to it, our code was causing the webpage to freeze. And after a bit of time, the browser gave us the option to stop it. This happened because our `computePrimes()` function went rogue. After it was placed on the Call Stack it never finished running. It blocked the Call Stack and prevented rendering events from being processed.
+Let's return to our example. Before we added magic to it, our code was causing the webpage to freeze. And after a bit of time, the browser gave us the option to stop it. This happened because our `computePrimes()` function went rogue. After it was placed on the Call Stack it never finished running. It blocked the Call Stack and prevented rendering tasks from being processed.
 
 We were able to fix this by adding some magic. Of course, it wasn't _really_ magic. And now that we've talked about the Call Stack and Event Loop, we can understand how it actually works.
 
-We started with a single infinitely long function call. And our magic broke it up into a series of short running callbacks. Each callback would compute 500 primes and then enqueue an event to compute the next 500 primes (using `setTimeout(fn, 0)`). This allows the JS engine to handle other events that have been enqueued in-between prime calculations.
+We started with a single infinitely long task. And our magic broke it up into a series of short running task. Each task would compute 500 primes and then enqueue a new task to compute the next 500 primes (using `setTimeout(computePrimes, 0)`). This allowed the JS engine to handle other tasks that had been enqueued in-between prime calculations.
 
 Without Magic:
 
 ```
-|    Call Stack   |   | Event Queue |
-| computePrimes() |   | rerender    |
-|-----------------|   | rerender    |
-                      | rerender    |
-                      | ...         |
-                      |-------------|
+|    Call Stack   |   | Task Queue |
+| computePrimes() |   | rerender   |
+|-----------------|   | rerender   |
+                      | rerender   |
+                      | ...        |
+                      |------------|
 ```
 
 With Magic:
 
 ```
-|    Call Stack   |   |  Event Queue  |
+|    Call Stack   |   |   Task Queue  |
 | computePrimes() |   | rerender      |
 |-----------------|   | computePrimes |
                       | rerender      |
