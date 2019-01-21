@@ -40,7 +40,6 @@ while (EventLoop.waitForTask()) {
 - https://blog.bitsrc.io/microtask-and-macrotask-a-hands-on-approach-5d77050e2168
 - https://blog.risingstack.com/writing-a-javascript-framework-execution-timing-beyond-settimeout/
 - https://stackoverflow.com/questions/24117267/nodejs-settimeoutfn-0-vs-setimmediatefn
-- https://www.promisejs.org/implementing/
 - https://stackoverflow.com/questions/779379/why-is-settimeoutfn-0-sometimes-useful
 - https://developer.mozilla.org/en-US/docs/Tools/Performance/Scenarios/Intensive_JavaScript
 - https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/
