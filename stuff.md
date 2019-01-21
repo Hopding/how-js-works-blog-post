@@ -1,6 +1,23 @@
----
-Sure, I'd written plenty of JS code for web apps, Node apps, and React Native apps. But I reached the limits of my understanding while working on a
----
+# Simulating the Event Loop
+
+To help solidify our discussion about the Event Loop, let's write some code to simulate it:
+
+```
+while (EventLoop.waitForTask()) {
+  EventLoop.processNextTask()
+}
+```
+
+But this code doesn't account for the fact that the Event Loop consists of multiple task queues. Let's add that:
+
+```
+while (EventLoop.waitForTask()) {
+  const taskQueue = EventLoop.selectTaskQueue()
+  if (taskQueue.hasNextTask()) {
+    taskQueue.processNextTask()
+  }
+}
+```
 
 # Primary Sources
 
@@ -28,6 +45,7 @@ Sure, I'd written plenty of JS code for web apps, Node apps, and React Native ap
 - https://blog.sessionstack.com/how-javascript-works-event-loop-and-the-rise-of-async-programming-5-ways-to-better-coding-with-2f077c4438b5
 - https://stackoverflow.com/questions/2734025/is-javascript-guaranteed-to-be-single-threaded/2734311#2734311
 - https://en.m.wikipedia.org/wiki/Reentrancy_(computing)
+- https://stackoverflow.com/a/19699970
 
 # Footnotes Example:
 

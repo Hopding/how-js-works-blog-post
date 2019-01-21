@@ -16,11 +16,13 @@
       }
       return true;
     }
-    async function computePrimes(onPrime) {
-      for (let currNum = 1; true; currNum++) {
+
+    function computePrimes(onPrime, startAt = 1) {
+      let currNum;
+      for (currNum = startAt; currNum % 500 !== 0; currNum++) {
         if (isPrime(currNum)) onPrime(currNum);
-        if (currNum % 500 === 0) await new Promise(setTimeout); // Magic‽
       }
+      setTimeout(() => computePrimes(onPrime, currNum + 1), 0); // Magic‽
     }
 
     let primesCount = 0;
