@@ -9,7 +9,7 @@ Potential titles:
 
 # &lt; Insert Title Here &gt;
 
-...This is the first in a series of two posts about JavaScript's execution model. This post focuses on the Call Stack and Event Loop. The second post builds on this by discussing how Promises fit into the picture...
+_This is the first in a series of two posts about JavaScript's execution model. This post focuses on the Call Stack and Event Loop. The second post builds on this by discussing how Promises fit into the picture._
 
 I've been writing JavaScript for awhile. I've written web services with Express, web apps with React, mobile apps with React Native, and I've authored libraries, such as [`pdf-lib`](https://github.com/Hopding/pdf-lib).
 
@@ -275,7 +275,7 @@ Let's return to our example. Before we added magic to it, our code was causing t
 
 We were able to fix this by adding some magic. Of course, it wasn't _really_ magic. And now that we've talked about the Call Stack and Event Loop, we can understand how it actually works.
 
-We started with a single infinitely long task. And our magic broke it up into a series of short running task. Each task would compute 500 primes and then enqueue a new task to compute the next 500 primes (using `setTimeout(computePrimes, 0)`). This allowed the JS engine to handle other tasks that had been enqueued in-between prime calculations.
+We started with a single infinitely long task. And our magic broke it up into a series of short running tasks. Each task would compute 500 primes and then enqueue a new task to compute the next 500 primes (using `setTimeout(computePrimes, 0)`). This allowed the JS engine to handle other tasks that had been enqueued in-between prime calculations.
 
 Without Magic:
 
@@ -303,7 +303,7 @@ With Magic:
 
 # Conclusion
 
-JavaScript is a single-threaded, non-blocking, asynchronous programming langauge. As JavaScript developers, we deal with these language features on a daily basis. We tend to have an intuitive understanding of how to write and use async JavaScript.
+JavaScript is a single-threaded, non-blocking, asynchronous programming language. As JavaScript developers, we deal with these language features on a daily basis. We tend to have an intuitive understanding of how to write and use async JavaScript.
 
 However, for many of us this intuitive understanding is not backed by a strong grasp of JavaScript's execution model and how it all works under the hood. This is unfortunate, because it can result in wasted effort over things that shouldn't really be a concern (e.g. making functions reentrant). And it can prevent us from understanding how to troubleshoot certain performance issues (e.g. long-running synchronous functions).
 
@@ -311,26 +311,26 @@ I hope this post has helped you better understand JavaScript's execution model! 
 
 # Primary Sources
 
-- https://www.ecma-international.org/ecma-262/9.0/index.html
-- https://www.w3.org/TR/html52/webappapis.html
+- [JavaScript Language Specification](https://www.ecma-international.org/ecma-262/9.0/index.html)
+- [HTML Scripting Specification](https://www.w3.org/TR/html52/webappapis.html)
 
 # Secondary Sources
 
-- https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/
-- https://www.quora.com/Does-JavaScript-in-the-browser-have-the-equivalent-of-process-nextTick-or-setImmediate-in-node-js-or-do-we-just-have-setTimeout
-- https://stackoverflow.com/questions/26615966/how-to-make-non-blocking-javascript-code
-- http://latentflip.com/loupe/
-- https://www.youtube.com/watch?v=8aGhZQkoFbQ
-- https://stackoverflow.com/questions/38752620/promise-vs-settimeout
-- https://blog.bitsrc.io/microtask-and-macrotask-a-hands-on-approach-5d77050e2168
-- https://blog.risingstack.com/writing-a-javascript-framework-execution-timing-beyond-settimeout/
-- https://stackoverflow.com/questions/24117267/nodejs-settimeoutfn-0-vs-setimmediatefn
-- https://stackoverflow.com/questions/779379/why-is-settimeoutfn-0-sometimes-useful
-- https://developer.mozilla.org/en-US/docs/Tools/Performance/Scenarios/Intensive_JavaScript
-- https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/
-- https://esdiscuss.org/topic/the-initialization-steps-for-web-browsers#content-16
-- https://blog.sessionstack.com/how-javascript-works-the-building-blocks-of-web-workers-5-cases-when-you-should-use-them-a547c0757f6a
-- https://blog.sessionstack.com/how-javascript-works-event-loop-and-the-rise-of-async-programming-5-ways-to-better-coding-with-2f077c4438b5
-- https://stackoverflow.com/questions/2734025/is-javascript-guaranteed-to-be-single-threaded/2734311#2734311
-- https://en.m.wikipedia.org/wiki/Reentrancy_(computing)
-- https://stackoverflow.com/a/19699970
+- [https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/)
+- [https://www.quora.com/Does-JavaScript-in-the-browser-have-the-equivalent-of-process-nextTick-or-setImmediate-in-node-js-or-do-we-just-have-setTimeout](https://www.quora.com/Does-JavaScript-in-the-browser-have-the-equivalent-of-process-nextTick-or-setImmediate-in-node-js-or-do-we-just-have-setTimeout)
+- [https://stackoverflow.com/questions/26615966/how-to-make-non-blocking-javascript-code](https://stackoverflow.com/questions/26615966/how-to-make-non-blocking-javascript-code)
+- [http://latentflip.com/loupe/](http://latentflip.com/loupe/)
+- [https://www.youtube.com/watch?v=8aGhZQkoFbQ](https://www.youtube.com/watch?v=8aGhZQkoFbQ)
+- [https://stackoverflow.com/questions/38752620/promise-vs-settimeout](https://stackoverflow.com/questions/38752620/promise-vs-settimeout)
+- [https://blog.bitsrc.io/microtask-and-macrotask-a-hands-on-approach-5d77050e2168](https://blog.bitsrc.io/microtask-and-macrotask-a-hands-on-approach-5d77050e2168)
+- [https://blog.risingstack.com/writing-a-javascript-framework-execution-timing-beyond-settimeout/](https://blog.risingstack.com/writing-a-javascript-framework-execution-timing-beyond-settimeout/)
+- [https://stackoverflow.com/questions/24117267/nodejs-settimeoutfn-0-vs-setimmediatefn](https://stackoverflow.com/questions/24117267/nodejs-settimeoutfn-0-vs-setimmediatefn)
+- [https://stackoverflow.com/questions/779379/why-is-settimeoutfn-0-sometimes-useful](https://stackoverflow.com/questions/779379/why-is-settimeoutfn-0-sometimes-useful)
+- [https://developer.mozilla.org/en-US/docs/Tools/Performance/Scenarios/Intensive_JavaScript](https://developer.mozilla.org/en-US/docs/Tools/Performance/Scenarios/Intensive_JavaScript)
+- [https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/](https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/)
+- [https://esdiscuss.org/topic/the-initialization-steps-for-web-browsers#content-16](https://esdiscuss.org/topic/the-initialization-steps-for-web-browsers#content-16)
+- [https://blog.sessionstack.com/how-javascript-works-the-building-blocks-of-web-workers-5-cases-when-you-should-use-them-a547c0757f6a](https://blog.sessionstack.com/how-javascript-works-the-building-blocks-of-web-workers-5-cases-when-you-should-use-them-a547c0757f6a)
+- [https://blog.sessionstack.com/how-javascript-works-event-loop-and-the-rise-of-async-programming-5-ways-to-better-coding-with-2f077c4438b5](https://blog.sessionstack.com/how-javascript-works-event-loop-and-the-rise-of-async-programming-5-ways-to-better-coding-with-2f077c4438b5)
+- [https://stackoverflow.com/questions/2734025/is-javascript-guaranteed-to-be-single-threaded/2734311#2734311](https://stackoverflow.com/questions/2734025/is-javascript-guaranteed-to-be-single-threaded/2734311#2734311)
+- [https://en.m.wikipedia.org/wiki/Reentrancy\_(computing)](<https://en.m.wikipedia.org/wiki/Reentrancy_(computing)>)
+- [https://stackoverflow.com/a/19699970](https://stackoverflow.com/a/19699970)
