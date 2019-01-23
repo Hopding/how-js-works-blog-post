@@ -265,7 +265,7 @@ JavaScript programmers don't have to worry about making their functions reentran
 
 However, this simple execution model doesn't come without risks.
 
-Suppose a "rogue" task makes its way onto the Call Stack. This rogue task never finishes running, and occupies the Call Stack indefinitely. If this happens, the rogue task will prevent all other tasks from ever being processed. This means all other work will grind to a halt, hindering critical tasks such a rerendering!
+Suppose a "rogue" task makes its way onto the Call Stack. This rogue task never finishes running, and occupies the Call Stack indefinitely. If this happens, the rogue task will prevent all other tasks from ever being processed. This means all other work will grind to a halt, hindering critical tasks such as rerendering!
 
 For this reason, web browsers monitor how much time tasks spend on the Call Stack. If a task takes too long to finish, the browser alerts the user and gives them the option to "Stop It" - removing the task from the Call Stack and allowing other events to be processed.
 
