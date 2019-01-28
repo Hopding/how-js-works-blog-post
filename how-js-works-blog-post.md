@@ -261,7 +261,7 @@ Consider [reentrancy](<https://en.wikipedia.org/wiki/Reentrancy_(computing)>), d
 
 JavaScript programmers don't have to worry about making their functions reentrant, because they can never be interrupted[^1]! JS functions always run to completion.
 
-[^1]: This isn't strictly true. If a function is recursive it can be entered a second time before the initial invocation is complete. However, this is not a concurrency issue forced upon the developer by the runtime. So this scenario isn't representative of the context in which reentrancy is typically a concern for developers.
+[^1]: This isn't strictly true. For example, generators and recursive functions can be entered a second time before their initial invocation is complete. However, this is not a concurrency issue forced upon the developer by the runtime. So this scenario isn't representative of the context in which reentrancy is typically a concern for developers.
 
 However, this simple execution model doesn't come without risks.
 
@@ -316,6 +316,7 @@ I hope this post has helped you better understand JavaScript's execution model! 
 
 # Secondary Sources
 
+- [https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop)
 - [https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/)
 - [https://www.quora.com/Does-JavaScript-in-the-browser-have-the-equivalent-of-process-nextTick-or-setImmediate-in-node-js-or-do-we-just-have-setTimeout](https://www.quora.com/Does-JavaScript-in-the-browser-have-the-equivalent-of-process-nextTick-or-setImmediate-in-node-js-or-do-we-just-have-setTimeout)
 - [https://stackoverflow.com/questions/26615966/how-to-make-non-blocking-javascript-code](https://stackoverflow.com/questions/26615966/how-to-make-non-blocking-javascript-code)
