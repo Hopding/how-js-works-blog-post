@@ -93,7 +93,7 @@ Logging the primes is fun and all, but I'd rather see how many primes we've calc
 When you load this webpage in a browser, you'll see the following:
 
 ![Webpage after first loading](webpage_after_loading.png)
-
+.
 Let's click the `Start Computing Primes` button and see what happens:
 
 ![Webpage after running for a short time](webpage_after_running.png)
@@ -159,7 +159,7 @@ main();
 
 Let's look at each transition made in the Call Stack while executing the above snippet:
 
-![Visualization of the Call Stack](1.gif)
+![Visualization of the Call Stack. Created with https://jsv9000.app/](1.gif)
 
 This visualization of the Call Stack is familiar to most of us. We all have an intuitive feel for what's going on here. However, the Call Stack is only part of JavaScript's execution model. It doesn't tell the full story. Consider this snippet:
 
@@ -218,7 +218,7 @@ While a task is running, it can enqueue other tasks to be processed in subsequen
 
 Let's visualize our last code snippet with a Call Stack and Task Queue:
 
-![Visualization of the Call Stack](2.gif)
+![Visualization of the Call Stack. Created with https://jsv9000.app/](2.gif)
 
 # One Event at a Time
 
@@ -248,13 +248,13 @@ We started with a single infinitely long task. And our magic broke it up into a 
 
 ## Without Magic:
 
-![Visualization of Naive Primes Implementation](3c.gif)
+![Visualization of Naive Primes Implementation. Created with https://jsv9000.app/](3c.gif)
 
 Notice how the Event Loop is stuck at Script Evaluation step the entire time. No matter how long the script run, it will never move to the subsequent steps to rerender.
 
 ## With Magic:
 
-![Visualization of Primes with Tasks Implementation](4c.gif)
+![Visualization of Primes with Tasks Implementation. Created with https://jsv9000.app/](4c.gif)
 
 Notice how the Event Loop moves through each stage of the event loop. After checking three numbers to see if they're prime, a new task is enqueued and the Event Loop is able to allow rerendering.
 
