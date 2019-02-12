@@ -7,7 +7,7 @@ Potential titles:
 - JS `setTimeout` In Depth
 - JavaScript's Execution Model
 
-# &lt; Insert Title Here &gt;
+# JavaScript `setTimeout()` In Depth
 
 _This is the first in a series of two posts about JavaScript's execution model. This post focuses on the Call Stack and Event Loop. The second post builds on this by discussing how Promises fit into the picture._
 
@@ -33,10 +33,11 @@ function isPrime(n) {
   return true;
 }
 
-function computePrimes(onPrime, startAt = 1) {
-  let currNum;
-  for (currNum = startAt; true; currNum++) {
+function computePrimes(onPrime, startAt = 2) {
+  let currNum = startAt;
+  while (true) {
     if (isPrime(currNum)) onPrime(currNum);
+    currNum += 1;
   }
 }
 ```
@@ -104,12 +105,20 @@ Our code is definitely running, you can see that by the logs it's printing. That
 Let's see if we can fix this with some magic 🎩🐇✨. Rewrite the `computePrimes()` function like so:
 
 ```js
-function computePrimes(onPrime, startAt = 1) {
+function computePrimes(onPrime, startAt = 2) {
   let currNum;
   for (currNum = startAt; currNum % 500 !== 0; currNum++) {
     if (isPrime(currNum)) onPrime(currNum);
   }
-  setTimeout(() => computePrimes(onPrime, currNum + 1), 0); // Magic‽
+
+function computePrimes(onPrime, startAt = 2) {
+  let currNum = startAt;
+  while (true) {
+    if (isPrime(currNum)) onPrime(currNum);
+    currNum += 1;
+    if (currNum % 500 !== 0) break;
+  }
+  setTimeout(() => computePrimes(onPrime, currNum), 0); // Magic‽
 }
 ```
 
@@ -150,26 +159,15 @@ main();
 
 Let's look at each transition made in the Call Stack while executing the above snippet:
 
-```
-| State 1 |   | State 2 |   |      State 3     |   |      State 4     |
-|---------|   | main()  |   | doStuff(x='baz') |   | doThings(y=x)    |
-              |---------|   | main()           |   | doStuff(x='baz') |
-                            |------------------|   | main()           |
-                                                   |------------------|
-
-|      State 5     |   |      State 6     |   | State 7 |   | State 8 |
-| foo()            |   | doStuff(x='baz') |   | main()  |   |---------|
-| doStuff(x='baz') |   | main()           |   |---------|
-| main()           |   |------------------|
-|------------------|
-```
+![Visualization of the Call Stack](1.gif)
 
 This visualization of the Call Stack is familiar to most of us. We all have an intuitive feel for what's going on here. However, the Call Stack is only part of JavaScript's execution model. It doesn't tell the full story. Consider this snippet:
 
+<!-- prettier-ignore -->
 ```js
-const logA = () => console.log('A');
-const logB = () => console.log('B');
-const logC = () => console.log('C');
+function logA() { console.log('A') }
+function logB() { console.log('B') }
+function logC() { console.log('C') }
 
 logA();
 setTimeout(logB, 100);
@@ -220,36 +218,7 @@ While a task is running, it can enqueue other tasks to be processed in subsequen
 
 Let's visualize our last code snippet with a Call Stack and Task Queue:
 
-```
-============ State 1 ============
-|  Call Stack  |   | Task Queue |
-|--------------|   |------------|
-
-============ State 2 ============
-|  Call Stack  |   | Task Queue |
-| logA()       |   |------------|
-|--------------|
-
-============ State 3 ============
-|  Call Stack  |   | Task Queue |
-| setTimeout() |   | logB       |
-|--------------|   |------------|
-
-============ State 4 ============
-|  Call Stack  |   | Task Queue |
-| logC()       |   | logB       |
-|--------------|   |------------|
-
-============ State 5 ============
-|  Call Stack  |   | Task Queue |
-|--------------|   | logB       |
-                   |------------|
-
-============ State 6 ============
-|  Call Stack  |   | Task Queue |
-| logB()       |   |------------|
-|--------------|
-```
+![Visualization of the Call Stack](2.gif)
 
 # One Event at a Time
 
@@ -277,29 +246,17 @@ We were able to fix this by adding some magic. Of course, it wasn't _really_ mag
 
 We started with a single infinitely long task. And our magic broke it up into a series of short running tasks. Each task would compute 500 primes and then enqueue a new task to compute the next 500 primes (using `setTimeout(computePrimes, 0)`). This allowed the JS engine to handle other tasks that had been enqueued in-between prime calculations.
 
-Without Magic:
+## Without Magic:
 
-```
-|    Call Stack   |   | Task Queue |
-| computePrimes() |   | rerender   |
-|-----------------|   | rerender   |
-                      | rerender   |
-                      | ...        |
-                      |------------|
-```
+![Visualization of Naive Primes Implementation](3c.gif)
 
-With Magic:
+Notice how the Event Loop is stuck at Script Evaluation step the entire time. No matter how long the script run, it will never move to the subsequent steps to rerender.
 
-```
-|    Call Stack   |   |   Task Queue  |
-| computePrimes() |   | rerender      |
-|-----------------|   | computePrimes |
-                      | rerender      |
-                      | computePrimes |
-                      | rerender      |
-                      | ...           |
-                      |---------------|
-```
+## With Magic:
+
+![Visualization of Primes with Tasks Implementation](4c.gif)
+
+Notice how the Event Loop moves through each stage of the event loop. After checking three numbers to see if they're prime, a new task is enqueued and the Event Loop is able to allow rerendering.
 
 # Conclusion
 
