@@ -85,11 +85,11 @@ Logging the primes is fun and all, but I'd rather see how many primes we've calc
 
 When you load this webpage in a browser, you'll see the following:
 
-![Webpage after first loading](webpage_after_loading.png)
+![Webpage after first loading](assets/webpage_after_loading.png)
 .
 Let's click the `Start Computing Primes` button and see what happens:
 
-![Webpage after running for a short time](webpage_after_running.png)
+![Webpage after running for a short time](assets/webpage_after_running.png)
 
 Oh, that's too bad. We don't get a live `Total Primes Found` count. Instead the browser warns us that the webpage is running slow, and gives us the opportunity to stop it.
 
@@ -111,7 +111,7 @@ function computePrimes(onPrime, startAt = 2) {
 
 Now what happens when we click the `Start Computing Primes` button?
 
-![Webpage after running with magic](webpage_after_running_with_magic.png)
+![Webpage after running with magic](assets/webpage_after_running_with_magic.png)
 
 It works! But why...? To answer this question, we need to talk about JavaScript's **Call Stack** and **Event Loop**. Let's start with the Call Stack.
 
@@ -146,7 +146,7 @@ main();
 
 Let's look at each transition made in the Call Stack while executing the above snippet:
 
-![Visualization of the Call Stack. Created with https://jsv9000.app/](1.gif)
+![Visualization of the Call Stack. Created with https://jsv9000.app/](assets/1.gif)
 
 This visualization of the Call Stack is familiar to most of us. We all have an intuitive feel for what's going on here. However, the Call Stack is only part of JavaScript's execution model. It doesn't tell the full story. Consider this snippet:
 
@@ -199,11 +199,11 @@ To process a task, the Event Loop invokes the `Function` associated with it. Whi
 
 While a task is running, it can enqueue other tasks to be processed in subsequent ticks of the Event Loop. There are several ways to do this, the simplest of which is `setTimeout(taskFn, 0)`. Tasks can also come from external sources such as DOM and network events.
 
-![The JavaScript Event Loop](basic-task-queue.png)
+![The JavaScript Event Loop](assets/basic-task-queue.png)
 
 Let's visualize our last code snippet with a Call Stack and Task Queue:
 
-![Visualization of the Call Stack. Created with https://jsv9000.app/](2.gif)
+![Visualization of the Call Stack. Created with https://jsv9000.app/](assets/2.gif)
 
 # One Event at a Time
 
@@ -233,13 +233,13 @@ We started with a single infinitely long task. And our magic broke it up into a 
 
 ## Without Magic:
 
-![Visualization of Naive Primes Implementation. Created with https://jsv9000.app/](3c.gif)
+![Visualization of Naive Primes Implementation. Created with https://jsv9000.app/](assets/3c.gif)
 
 Notice how the Event Loop is stuck at Script Evaluation step the entire time. No matter how long the script runs, it will never move to the subsequent steps to rerender.
 
 ## With Magic:
 
-![Visualization of Primes with Tasks Implementation. Created with https://jsv9000.app/](4c.gif)
+![Visualization of Primes with Tasks Implementation. Created with https://jsv9000.app/](assets/4c.gif)
 
 Notice how the Event Loop moves through each stage of the event loop. After checking three numbers to see if they're prime, a new task is enqueued and the Event Loop is able to allow rerendering.
 
