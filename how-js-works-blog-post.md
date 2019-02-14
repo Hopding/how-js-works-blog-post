@@ -86,7 +86,7 @@ Logging the primes is fun and all, but I'd rather see how many primes we've calc
 When you load this webpage in a browser, you'll see the following:
 
 ![Webpage after first loading](assets/webpage_after_loading.png)
-.
+
 Let's click the `Start Computing Primes` button and see what happens:
 
 ![Webpage after running for a short time](assets/webpage_after_running.png)
