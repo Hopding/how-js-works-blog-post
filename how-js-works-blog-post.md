@@ -9,6 +9,8 @@ Potential titles:
 
 # JavaScript `setTimeout()` In Depth
 
+> Note: The animated visualizations in this post were created with https://jsv9000.app/. I encourage you to play around with this web app to learn more about the Event Loop with a hands-on approach.
+
 _This is the first in a series of two posts about JavaScript's execution model. This post focuses on the Call Stack and Event Loop. The second post builds on this by discussing how Promises fit into the picture._
 
 I've been writing JavaScript for awhile. I've written web services with Express, web apps with React, mobile apps with React Native, and I've authored libraries, such as [`pdf-lib`](https://github.com/Hopding/pdf-lib).
@@ -106,17 +108,11 @@ Let's see if we can fix this with some magic 🎩🐇✨. Rewrite the `computePr
 
 ```js
 function computePrimes(onPrime, startAt = 2) {
-  let currNum;
-  for (currNum = startAt; currNum % 500 !== 0; currNum++) {
-    if (isPrime(currNum)) onPrime(currNum);
-  }
-
-function computePrimes(onPrime, startAt = 2) {
   let currNum = startAt;
   while (true) {
     if (isPrime(currNum)) onPrime(currNum);
     currNum += 1;
-    if (currNum % 500 !== 0) break;
+    if (currNum % 500 === 0) break;
   }
   setTimeout(() => computePrimes(onPrime, currNum), 0); // Magic‽
 }
@@ -212,9 +208,7 @@ To process a task, the Event Loop invokes the `Function` associated with it. Whi
 
 While a task is running, it can enqueue other tasks to be processed in subsequent ticks of the Event Loop. There are several ways to do this, the simplest of which is `setTimeout(taskFn, 0)`. Tasks can also come from external sources such as DOM and network events.
 
-![The JavaScript Event Loop](basic_event_loop_21.png)
-
-(Diagram Credit: [Bertalan Miklos](https://blog.risingstack.com/writing-a-javascript-framework-execution-timing-beyond-settimeout/))
+![The JavaScript Event Loop](basic-task-queue.png)
 
 Let's visualize our last code snippet with a Call Stack and Task Queue:
 
@@ -250,7 +244,7 @@ We started with a single infinitely long task. And our magic broke it up into a 
 
 ![Visualization of Naive Primes Implementation. Created with https://jsv9000.app/](3c.gif)
 
-Notice how the Event Loop is stuck at Script Evaluation step the entire time. No matter how long the script run, it will never move to the subsequent steps to rerender.
+Notice how the Event Loop is stuck at Script Evaluation step the entire time. No matter how long the script runs, it will never move to the subsequent steps to rerender.
 
 ## With Magic:
 
